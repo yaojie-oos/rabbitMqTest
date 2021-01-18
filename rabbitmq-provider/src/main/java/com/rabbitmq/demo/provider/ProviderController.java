@@ -1,6 +1,9 @@
 package com.rabbitmq.demo.provider;
 
 import com.rabbitmq.demo.config.RabbitmqConfig;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +22,16 @@ public class ProviderController {
 
     @GetMapping(value = "/provider/message")
     public String provider(String message){
-        rabbitTemplate1.convertAndSend(RabbitmqConfig.YAOJIEEXCHANGE,"yaojie",message);
-        rabbitTemplate2.convertAndSend(RabbitmqConfig.YAOJIEEXCHANGE,"yaojie",message);
+        rabbitTemplate1.convertAndSend(RabbitmqConfig.YAOJIEEXCHANGE,"yaojie",message, new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setExpiration("5000");
+                return message;
+            }
+        });
+        rabbitTemplate2.convertAndSend(RabbitmqConfig.YAOJIEEXCHANGE, "yaojie", message);
         return message;
     }
+
+
 }

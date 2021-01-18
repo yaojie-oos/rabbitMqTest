@@ -3,6 +3,7 @@ package com.rabbitmq.demo.config;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.SerializerMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,6 +11,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+
+import java.sql.SQLTransactionRollbackException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Configuration
@@ -22,7 +28,7 @@ public class RabbitmqConfig {
 
     //初始化队列
     @Bean("yaojiequeue")
-    public Queue getQueue(){
+    public Queue getQueue(RabbitAdmin rabbitAdmin){
         return QueueBuilder.durable(YAOJIEQUEUE).build();
     }
 
@@ -38,6 +44,11 @@ public class RabbitmqConfig {
     @Bean
     public Binding binding(@Qualifier("yaojiequeue") Queue yaojiequeue, @Qualifier("yaojieexchange") Exchange yaojieexchange){
         return BindingBuilder.bind(yaojiequeue).to(yaojieexchange).with("yaojie").noargs();
+    }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
     }
 
 

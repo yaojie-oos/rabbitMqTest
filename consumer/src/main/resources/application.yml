@@ -9,5 +9,5 @@ spring:
       simple:
         acknowledge-mode: manual
       type: simple
-    publisher-returns: true
-
+      direct:
+        prefetch: 5
