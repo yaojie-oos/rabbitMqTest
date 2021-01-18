@@ -23,6 +23,7 @@ public class Consumer implements ChannelAwareMessageListener {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(),true);
         }catch (Exception e){
             try {
+                //requeue设置为false 则不发回原来队列，若绑定死刑交换机则路由到死刑交换机
                 channel.basicNack(message.getMessageProperties().getDeliveryTag(),true,true);
             } catch (IOException ex) {
                 ex.printStackTrace();

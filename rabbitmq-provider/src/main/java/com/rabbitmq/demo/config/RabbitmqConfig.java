@@ -26,10 +26,16 @@ public class RabbitmqConfig {
     //交换机名称
     public static final  String  YAOJIEEXCHANGE = "yaojie_exchange";
 
+    //队列名称
+    public  static final  String  DEADQUEUE = "dead_queue";
+
+    //交换机名称
+    public static final  String DEADEXCHANGE = "dead_exchange";
+
     //初始化队列
     @Bean("yaojiequeue")
-    public Queue getQueue(RabbitAdmin rabbitAdmin){
-        return QueueBuilder.durable(YAOJIEQUEUE).build();
+    public Queue getQueue(){
+        return QueueBuilder.durable(YAOJIEQUEUE).deadLetterExchange(RabbitmqConfig.DEADEXCHANGE).deadLetterRoutingKey("yaojie").build();
     }
 
     //初始化交换机
@@ -40,15 +46,28 @@ public class RabbitmqConfig {
     }
 
     //绑定
-
     @Bean
     public Binding binding(@Qualifier("yaojiequeue") Queue yaojiequeue, @Qualifier("yaojieexchange") Exchange yaojieexchange){
         return BindingBuilder.bind(yaojiequeue).to(yaojieexchange).with("yaojie").noargs();
     }
 
+
+    //初始化死性队列
+    @Bean("deadqueue")
+    public Queue deadqueue(){
+        return QueueBuilder.durable(DEADQUEUE).build();
+    }
+
+    //初始化交换机
+    @Bean("deadexchange")
+    public Exchange getDeadexchange(){
+        return ExchangeBuilder.topicExchange(DEADEXCHANGE).durable(true).build();
+    }
+
+    //绑定
     @Bean
-    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
-        return new RabbitAdmin(connectionFactory);
+    public Binding deadBinding(@Qualifier("deadqueue") Queue deadqueue, @Qualifier("deadexchange") Exchange deadexchange){
+        return BindingBuilder.bind(deadqueue).to(deadexchange).with("yaojie").noargs();
     }
 
 
