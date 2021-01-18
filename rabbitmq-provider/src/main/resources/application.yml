@@ -5,5 +5,11 @@ spring:
     virtual-host: /yaojie
     username: yaojie
     password: yaojie
+    publisher-returns: true
+    publisher-confirm-type: correlated
+
+
+
+
 server:
   port: 9001

@@ -5,4 +5,9 @@ spring:
     virtual-host: /yaojie
     username: yaojie
     password: yaojie
+    listener:
+      simple:
+        acknowledge-mode: manual
+      type: simple
+    publisher-returns: true
 
