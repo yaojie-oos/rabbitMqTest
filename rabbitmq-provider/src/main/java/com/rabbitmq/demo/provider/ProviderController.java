@@ -8,8 +8,11 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 public class ProviderController {
@@ -29,7 +32,7 @@ public class ProviderController {
                 return message;
             }
         });
-        rabbitTemplate2.convertAndSend(RabbitmqConfig.YAOJIEEXCHANGE, "yaojie", message);
+        rabbitTemplate2.convertAndSend(RabbitmqConfig.YAOJIEEXCHANGE, "yaojie", message,new CorrelationData(UUID.randomUUID().toString()));
         return message;
     }
 

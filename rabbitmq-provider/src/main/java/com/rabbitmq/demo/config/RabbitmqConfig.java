@@ -80,6 +80,8 @@ public class RabbitmqConfig {
             @Override
             public void confirm(CorrelationData correlationData, boolean b, String s) {
                 if(b){
+                    System.out.println(correlationData);
+                    System.out.println(s);
                     System.out.println("yaojierabbit1发送成功");
                 }else{
                     System.out.println("yaojierabbit1发送失败");
@@ -96,6 +98,7 @@ public class RabbitmqConfig {
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             @Override
             public void confirm(CorrelationData correlationData, boolean b, String s) {
+                System.out.println(correlationData.getId());
                 if(b){
                     System.out.println("yaojierabbit2发送成功");
                 }else{
