@@ -1,0 +1,3 @@
+[com.rabbitmq.demo.task]
+TestTask.test1 = * */1 * * *
+TestTask.test2 = * */1 * * *
